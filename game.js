@@ -44,9 +44,11 @@ export class Game {
       if (this.gameStarted) this.gameOver = true;
     }, false);
 
+    // this.strokeStar(200, 200, 10, 7, 2);
+
     this.distCalculator = new PointToLineDistance();
-    let t = this.distCalculator.distToSegment({ x: 100, y: 100 }, { x: 0, y: 0 }, { x: 1000, y: 700 });
-    console.log('dist: ', t);
+    //let t = this.distCalculator.distToSegment({ x: 100, y: 100 }, { x: 0, y: 0 }, { x: 1000, y: 700 });
+    //console.log('dist: ', t);
   }
 
   start() {
@@ -62,7 +64,7 @@ export class Game {
   gameCycle() {
     this.refresh();
   }
-  
+
 
   refresh() {
     if (this.gameOver) {
@@ -72,8 +74,8 @@ export class Game {
         this.highScore = this.score;
       }
       this.context.font = "30px Arial";
-      this.context.fillText('GAME OVER', CONSTANTS.VIEWPORT_WIDTH / 2 - 70, CONSTANTS.VIEWPORT_HEIGHT / 2 - 15 );
-      this.context.fillText('SCORE: ' + this.score, CONSTANTS.VIEWPORT_WIDTH / 2 - 60, CONSTANTS.VIEWPORT_HEIGHT / 2 + 15 );
+      this.context.fillText('GAME OVER', CONSTANTS.VIEWPORT_WIDTH / 2 - 70, CONSTANTS.VIEWPORT_HEIGHT / 2 - 15);
+      this.context.fillText('SCORE: ' + this.score, CONSTANTS.VIEWPORT_WIDTH / 2 - 60, CONSTANTS.VIEWPORT_HEIGHT / 2 + 15);
       this.gameStarted = false;
       return;
     }
@@ -87,11 +89,10 @@ export class Game {
     this.asteroids.forEach((asteroid, index) => {
       if (this.asteroidCollision(asteroid)) {
         this.gameOver = true;
-        return;
       }
       asteroid.move();
       if (this.asteroidCollision(asteroid)) {
-        this.gameOver = true;
+        this.gameOver = true;   
       }
       //console.log(index, asteroid.x, asteroid.y, asteroid.speedX, asteroid.speedY)
       this.context.beginPath();
@@ -109,6 +110,9 @@ export class Game {
     this.context.fillText('SCORE: ' + this.score, 10, 10);
     this.context.fillText('HIGH SCORE: ' + this.highScore, 10, 25);
     this.context.fillText('Asteroids: ' + this.asteroids.length, 10, 40);
+    if (this.gameOver) {
+      this.strokeStar(this.mousePos.x, this.mousePos.y, 10, 7, 2);
+    }
   }
 
   asteroidCollision(asteroid) {
@@ -139,12 +143,14 @@ export class Game {
   }
 
   checkMouseMoveCollisions() {
+    if (this.gameOver) return;
     this.asteroids.forEach(asteroid => {
       let collision = this.checkCollision(this.mousePos.x, this.mousePos.y, asteroid.x, asteroid.y, asteroid.size);
       if (collision && asteroid.excludeFromCollisionCount <= 0) {
         console.log('collision mousemove: ', collision);
         this.collisionCounter++;
         asteroid.excludeFromCollisionCount = 10;
+        this.strokeStar(this.mousePos.x, this.mousePos.y, 10, 7, 2);
         this.gameOver = true;
       }
 
@@ -155,13 +161,14 @@ export class Game {
         console.log('collision line: ', collision);
         this.collisionCounter++;
         asteroid.excludeFromCollisionCount = 10;
+        this.strokeStar(this.mousePos.x, this.mousePos.y, 10, 7, 2);
         this.gameOver = true;
       }
     });
   }
 
   mouseCollision() {
-    
+
   }
 
   checkCollision(a, b, x, y, r) {
@@ -173,11 +180,27 @@ export class Game {
     return false;
   }
 
-
+  strokeStar(x, y, r, n, inset) {
+    this.context.save();
+    this.context.beginPath();
+    this.context.translate(x, y);
+    this.context.moveTo(0, 0 - r);
+    for (var i = 0; i < n; i++) {
+      this.context.rotate(Math.PI / n);
+      this.context.lineTo(0, 0 - (r * inset));
+      this.context.rotate(Math.PI / n);
+      this.context.lineTo(0, 0 - r);
+    }
+    this.context.closePath(); 
+    this.context.fillStyle = '#FF0000';
+    this.context.fill();
+    this.context.restore();
+  }
 
   clearCanvas() {
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
   }
+
 }
 
 export class Asteroid {
