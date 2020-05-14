@@ -1,0 +1,33 @@
+
+body {
+  display: grid;
+  place-items: center;
+}
+
+.container {
+  display: grid;
+  grid-template-columns: repeat(4, 102px);
+  grid-template-rows: repeat(4, 102px);
+  gap: 5px;
+}
+
+.tile {
+  border: 1px solid blue;
+  display: grid;
+  place-items: center;
+  font-size: 2rem;
+}
+
+.empty{
+  border: 1px solid blue;
+  background-color: lightcyan;
+}
+
+#message {
+  color: green;
+}
+
+.crop {
+  clip-path: inset(100px 300px 200px 0px);
+  transform: translateY(-75px);
+}

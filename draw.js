@@ -12,11 +12,3 @@ var button = document.getElementById("start").onclick = main;
 function main() {
   game.start();
 }
-
-function gameCycle() {
-  game.refresh();
-}
-
-window.test = function test() {
-  main();
-}
