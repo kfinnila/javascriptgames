@@ -2,18 +2,27 @@
 const IMAGE_SIZE = 400;
 const TILE_SIZE = 100;
 
-let imagefile = 'merling.png';
-let tiles = [...Array(16).keys()];
-tiles.reverse().pop();
-tiles.reverse().push(0);
-moveCounter = 0;
+let imagefile = 'image1.png';
 
 let gameStarted = false;
 let shuffling = false;
+let tiles = [];
 let puzzle = document.getElementById('puzzle');
 console.log(puzzle);
 
+reset();
 createPuzzle();
+
+function reset() {
+  tiles = [...Array(16).keys()];
+  tiles.reverse().pop();
+  tiles.reverse().push(0);
+  moveCounter = 0;
+  gameStarted = false;
+  shuffling = false;
+  document.getElementById('move-counter').innerHTML = '';
+  document.getElementById('message').innerHTML = '';
+}
 
 function createPuzzle() {
   puzzle.innerHTML = '';
@@ -150,4 +159,10 @@ function swap(tile, free) {
   let temp = tiles[tile];
   tiles[tile] = tiles[free];
   tiles[free] = temp;
+}
+
+function chooseImage(image) {
+  imagefile = image;
+  reset();
+  createPuzzle();
 }
