@@ -2,7 +2,7 @@
 const IMAGE_SIZE = 400;
 const TILE_SIZE = 100;
 
-let imagefile = 'liverpool.png';
+let imagefile = 'merling.png';
 let tiles = [...Array(16).keys()];
 tiles.reverse().pop();
 tiles.reverse().push(0);
